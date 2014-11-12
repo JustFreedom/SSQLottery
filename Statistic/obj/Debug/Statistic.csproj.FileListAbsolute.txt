@@ -1,0 +1,5 @@
+E:\程序\Code\SSQLottery\SSQLottery\bin\Statistic.dll
+E:\程序\Code\SSQLottery\SSQLottery\bin\Statistic.pdb
+E:\程序\Code\SSQLottery\SSQLottery\Statistic\obj\Debug\Statistic.csprojResolveAssemblyReference.cache
+E:\程序\Code\SSQLottery\SSQLottery\Statistic\obj\Debug\Statistic.dll
+E:\程序\Code\SSQLottery\SSQLottery\Statistic\obj\Debug\Statistic.pdb

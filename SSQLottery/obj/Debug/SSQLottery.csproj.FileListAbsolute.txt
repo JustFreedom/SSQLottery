@@ -1,0 +1,13 @@
+E:\程序\Code\SSQLottery\SSQLottery\SSQLottery\obj\Debug\SSQLottery.Form1.resources
+E:\程序\Code\SSQLottery\SSQLottery\SSQLottery\obj\Debug\SSQLottery.Properties.Resources.resources
+E:\程序\Code\SSQLottery\SSQLottery\SSQLottery\obj\Debug\SSQLottery.csproj.GenerateResource.Cache
+E:\程序\Code\SSQLottery\SSQLottery\SSQLottery\bin\Debug\SSQLottery.exe.config
+E:\程序\Code\SSQLottery\SSQLottery\SSQLottery\bin\Debug\SSQLottery.exe
+E:\程序\Code\SSQLottery\SSQLottery\SSQLottery\bin\Debug\SSQLottery.pdb
+E:\程序\Code\SSQLottery\SSQLottery\SSQLottery\bin\Debug\Statistic.dll
+E:\程序\Code\SSQLottery\SSQLottery\SSQLottery\bin\Debug\SSQDao.dll
+E:\程序\Code\SSQLottery\SSQLottery\SSQLottery\bin\Debug\Statistic.pdb
+E:\程序\Code\SSQLottery\SSQLottery\SSQLottery\bin\Debug\SSQDao.pdb
+E:\程序\Code\SSQLottery\SSQLottery\SSQLottery\obj\Debug\SSQLottery.csprojResolveAssemblyReference.cache
+E:\程序\Code\SSQLottery\SSQLottery\SSQLottery\obj\Debug\SSQLottery.exe
+E:\程序\Code\SSQLottery\SSQLottery\SSQLottery\obj\Debug\SSQLottery.pdb
