@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Analysis">
+      <HintPath>..\bin\Analysis.dll</HintPath>
+    </Reference>
     <Reference Include="Statistic">
       <HintPath>..\bin\Statistic.dll</HintPath>
     </Reference>

@@ -103,4 +103,14 @@ namespace SSQDao
         /// </summary>
         DetailOrderKey = 3
     }
+
+    public class BulkCopyColumnDefine<T>
+    {
+        public string ColumnName { get; set; }
+
+        public Type ColumnType { get; set; }
+
+        public List<T> Values; 
+
+    }
 }

@@ -114,6 +114,8 @@ namespace SSQDao
         /// <param name="originalNumbers">原始号码列表</param>
         void InsertOriginalNum(string issueNumber, IList<string> originalNumbers);
 
+        List<string> QueryOrgNumbers(string issueNumber, int startIndex, int length);
+
         /// <summary>
         /// 创建分析结果表
         /// <remarks>表名定义规则：数据来源_Analy_期号</remarks>
@@ -121,6 +123,8 @@ namespace SSQDao
         /// <param name="issueNumber"></param>
         /// <param name="ssqFrom"></param>
         void CreateAnalyResultTable(string issueNumber, SSQFrom ssqFrom);
+
+        void InsertAnalysisNumbers(string issueNumber, IList<SSQNumberDefine>  ssqNumberDefines);
 
                 /// <summary>
         /// 创建 “详细订单键值”表

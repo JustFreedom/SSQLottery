@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Analysis;
+using Analysis.Init;
 using Statistic;
 using Statistic.Init;
 using Statistic.StatisticOrgNumber;
@@ -29,12 +31,14 @@ namespace SSQLottery
         StatisticInit statisticInit = StatisticFactory.TaobaoStatisticInitInstance();
         private IStatisticDetailOrderKey statisticDetailOrderKey = StatisticFactory.StatisticDetailOrderKeyInstance();
         private IStatisticOrgNumber statisticOrgNumber = StatisticFactory.TaobaoStatisticOrgNumberInstance();
+        private AnalysisInit analysisInit = AnalysisFactory.TaobaoAnalysisInitInstance();
         public Form1()
         {
             InitializeComponent();
             statisticInit.InitDataBaseAndTable();
             InitStatisticDetailOrder();
             InitStatisticOriginalNum();
+            InitAnalysisResult();
             StatisticMonitor.NewStatisticPageCount += OnStatisticNewPage;
             StatisticMonitor.NewStatisticOriginalNumberCount += OnStatisticOriginalNumber;
         }
@@ -82,6 +86,22 @@ namespace SSQLottery
             this.TaobaoOrgStatisticedNumLbl.Text = orgProcessedPageCount.ToString();
 
         }
+
+        private void InitAnalysisResult()
+        {
+            string respStr = baseStatistic.GetResponseByUrl(UrlConst.UnitedListByPage);
+            string curIssueNumber = baseStatistic.GetCurrentIssueNumber(respStr);
+            int analysisResultItemsCount = analysisInit.GetAnalysisResultItemsCount(curIssueNumber);
+            this.TaobaoAnalysisResultTotalCountLbl.Text = analysisResultItemsCount.ToString();
+
+            int analysisedCount = analysisInit.GetAnalysisProcessedCount(curIssueNumber);
+            this.TaobaoOrgNumberAnalysisedCountLbl.Text = analysisedCount.ToString();
+
+            int orgNumberTotalCount = statisticInit.GetOrgItemsCount(curIssueNumber);
+            this.TaobaoOrgNumberTotalCountLbl.Text = orgNumberTotalCount.ToString();
+
+        }
+
 
         private void TaobaoDetailOrderStatisticStartBtn_Click(object sender, EventArgs e)
         {
@@ -157,6 +177,18 @@ namespace SSQLottery
         private void TaobaoOrgStatisticStopBtn_Click(object sender, EventArgs e)
         {
             AbortThread(StatisticOrgNumThreadName);
+        }
+
+        private void TaobaoAnalysisBtn_Click(object sender, EventArgs e)
+        {
+             string currentIssueNumber = this.IssueNumberTxt.Text.Trim();
+            int analysisedCount = analysisInit.GetAnalysisProcessedCount(currentIssueNumber);
+
+            var define = new AnalysisOrgNumberDefine(IssueNumberTxt.Text, analysisedCount);
+            Thread thread = new Thread(define.Analysis);
+            thread.Name = StatisticOrgNumThreadName;
+            _threads.Add(thread);
+            thread.Start();
         }
 
       

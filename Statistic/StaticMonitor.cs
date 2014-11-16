@@ -8,20 +8,20 @@ namespace Statistic
 {
    public    class StatisticMonitor
     {
-       public delegate void StatisticPage(int newStatisticPageCount,bool finished);
+       public delegate void StatisticPage(int newStatisticPageCount);
        public static event StatisticPage NewStatisticPageCount;
 
-       public delegate void StatisticOriginalNumber(int newOriginalNumberCount,bool finished);
+       public delegate void StatisticOriginalNumber(int newOriginalNumberCount);
 
        public static event StatisticOriginalNumber NewStatisticOriginalNumberCount;
 
-       public static void InvokeStatisticPage(int newStatisticPageCount, bool finished)
+       public static void InvokeStatisticPage(int newStatisticPageCount)
        {
-           NewStatisticPageCount.Invoke(newStatisticPageCount, finished);
+           NewStatisticPageCount.Invoke(newStatisticPageCount);
        }
-       public static void InvokeStatisticOriginalNumber(int newStatisticOriginalNumberCount, bool finished)
+       public static void InvokeStatisticOriginalNumber(int newStatisticOriginalNumberCount)
        {
-           NewStatisticOriginalNumberCount.Invoke(newStatisticOriginalNumberCount, finished);
+           NewStatisticOriginalNumberCount.Invoke(newStatisticOriginalNumberCount);
        }
     }
 }

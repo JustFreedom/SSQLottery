@@ -5,3 +5,5 @@ E:\程序\Code\SSQLottery\SSQLottery\Analysis\bin\Debug\SSQDao.pdb
 E:\程序\Code\SSQLottery\SSQLottery\Analysis\obj\Debug\Analysis.csprojResolveAssemblyReference.cache
 E:\程序\Code\SSQLottery\SSQLottery\Analysis\obj\Debug\Analysis.dll
 E:\程序\Code\SSQLottery\SSQLottery\Analysis\obj\Debug\Analysis.pdb
+E:\程序\Code\SSQLottery\SSQLottery\bin\Analysis.dll
+E:\程序\Code\SSQLottery\SSQLottery\bin\Analysis.pdb

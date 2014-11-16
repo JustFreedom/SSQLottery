@@ -41,25 +41,21 @@ namespace Statistic.Init
         {
             _baseDao.Init();
         }
-
-        /// <summary>
-        /// 获取分析结果进度数
-        /// </summary>
-        /// <param name="issueNumber"></param>
-        /// <returns></returns>
-        public int GetAnalyResultProgressCount(string issueNumber)
-        {
-            string tableName = _baseDao.GetTableName(issueNumber, TableType.AnalyResult, GetSSQFrom());
-            int count = GetProgressCount(tableName);
-            return count;
-        }
-
+        
         public int GetDetailOrderKeyProgressCount(string issueNumber)
         {
             string tableName = _baseDao.GetTableName(issueNumber,TableType.DetailOrderKey, GetSSQFrom());
             int count = GetProgressCount(tableName);
             return count;
         }
+
+        public int GetOrgItemsCount(string issueNumber)
+        {
+            string tableName = _baseDao.GetTableName(issueNumber, TableType.OriginalNum, GetSSQFrom());
+            int count = _baseDao.QueryItemsCount(tableName);
+            return count;
+        }
+
     }
 
     public class TaobaoStatisticInit : StatisticInit

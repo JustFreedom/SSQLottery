@@ -29,8 +29,6 @@ namespace Statistic.StatisticOrgNumber
             
             for (int i = processedCount; i < totalItemCount;i = i + pageSize)
             {
-                Stopwatch wa = new Stopwatch();
-                wa.Start();
                 List<string> detailOrderKeys = _baseDao.QueryDetailOrderKey(issueNumber, processedCount, pageSize);
                 _baseDao.InsertOrUpdateToProgressRate(orgTableName, detailOrderKeys.Count);
                 foreach (string orderKey in detailOrderKeys)
@@ -64,9 +62,6 @@ namespace Statistic.StatisticOrgNumber
                     }
                     orgNumbers.Clear();
                 }
-                wa.Stop();
-                var s = wa.ElapsedMilliseconds;              
-                
             }
             return orgNumbers;
         }

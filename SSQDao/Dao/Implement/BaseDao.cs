@@ -23,6 +23,7 @@ namespace SSQDao.Dao.Implement
         {
             return System.Configuration.ConfigurationManager.ConnectionStrings["SSQ"].ConnectionString;
         }
+     
 
         private void ExcuteNoQuery(string sql, params IDataParameter[] parameters)
         {
@@ -287,12 +288,63 @@ namespace SSQDao.Dao.Implement
             ExcuteNoQuery(sql, parameters.ToArray());
         }
 
+        public List<string> QueryOrgNumbers(string issueNumber, int startIndex, int length)
+        {
+            string tableName = GetTableName(issueNumber, TableType.OriginalNum, GetSSQFrom());
+            var sql = string.Format(
+                "begin use {0} select {1} from {2} order by {3} offset {4} rows fetch next {5} rows only end ",
+                Const.DataBaseName, Const.Org_OriginalNumber,
+                tableName, Const.Id, startIndex, length);
+            var result = new List<object>();
+            try
+            {
+                result = ExecuteReader(sql);
+            }
+            catch (Exception)
+            {
+            }
+            return result.Select(x => x.ToString()).ToList();
+        }
+
         public void CreateAnalyResultTable(string issueNumber, SSQFrom ssqFrom)
         {
             string tableName = GetTableName(issueNumber, TableType.AnalyResult, ssqFrom);
-            string sql = string.Format("begin use {0} if not exists (select * from sysobjects  where name = '{1}') create table {1} ({2} int PRIMARY KEY IDENTITY,{3} varchar(12) not null,{4} varchar(2) not null) end", Const.DataBaseName, tableName,Const.Id, Const.RedNumber, Const.BlueNumber);
+            string sql = string.Format("begin use {0} if not exists (select * from sysobjects  where name = '{1}') create table {1} ({2} int PRIMARY KEY IDENTITY,{3} varchar(19) not null,{4} varchar(2) not null) end", Const.DataBaseName, tableName,Const.Id, Const.RedNumber, Const.BlueNumber);
             ExcuteNoQuery(sql);
         }
+
+        public void InsertAnalysisNumbers(string issueNumber, IList<SSQNumberDefine> ssqNumberDefines)
+        {
+            string tableName = GetTableName(issueNumber, TableType.AnalyResult, GetSSQFrom());
+            if (ssqNumberDefines.Count < 1)
+                return;
+
+            using (DataTable dataTable = new DataTable())
+            {
+                dataTable.Columns.Add(Const.RedNumber, typeof(string));
+                dataTable.Columns.Add(Const.BlueNumber, typeof(string));
+                //dataTable.Columns.Add(Const.Id, typeof(int));
+                int i = 1;
+                foreach (SSQNumberDefine ssqNumberDefine in ssqNumberDefines)
+                {
+                    DataRow dataRow = dataTable.NewRow();
+                    dataRow[Const.RedNumber] = ssqNumberDefine.RedNumber;
+                    dataRow[Const.BlueNumber] = ssqNumberDefine.BlueNumber;
+                    //dataRow[Const.Id] = i++;
+                    dataTable.Rows.Add(dataRow);
+                }
+                using (SqlBulkCopy bulk = new SqlBulkCopy(GetConnectionString()))
+                {
+                    bulk.BatchSize = 5000;
+                    bulk.DestinationTableName = tableName;
+                    bulk.ColumnMappings.Add(Const.RedNumber, Const.RedNumber);
+                    bulk.ColumnMappings.Add(Const.BlueNumber, Const.BlueNumber);
+                    //bulk.ColumnMappings.Add(Const.Id, Const.Id);
+                    bulk.WriteToServer(dataTable);
+                }
+            }
+        }
+
 
         public void CreateDetailOrderKeyTable(string issueNumber, SSQFrom ssqFrom)
         {

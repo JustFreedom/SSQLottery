@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -43,8 +43,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis.cs" />
+    <Compile Include="AnalysisFactory.cs" />
+    <Compile Include="AnalysisNumber.cs" />
+    <Compile Include="Combines.cs" />
+    <Compile Include="Const.cs" />
+    <Compile Include="Defines.cs" />
+    <Compile Include="IAnalysisNumber.cs" />
+    <Compile Include="IBase.cs" />
+    <Compile Include="Init\AnalysisInit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegularConst.cs" />
+    <Compile Include="AnalysisMonitor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
