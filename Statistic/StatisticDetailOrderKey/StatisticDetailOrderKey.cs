@@ -16,9 +16,9 @@ namespace Statistic
        /// </summary>
        /// <param name="statisticedPageCount">已经统计了的页数</param>
        /// <returns></returns>
-       public List<string> StatisticDetailOrderKey(string issueNum,int statisticedPageCount)
+       public List<string> StatisticDetailOrderKey(string issueNum)
        {
-          
+           int statisticedPageCount = GetStatisticedPageCount(issueNum);
            List<string> detailOrderkeys = new List<string>();
            BaseStatistic baseStatistic = new TaobaoBaseStatistic();
            string respStr = baseStatistic.GetResponseByUrl(UrlConst.UnitedListByPage);
@@ -55,5 +55,18 @@ namespace Statistic
            _baseDao.InsertOrUpdateToProgressRate(tableName, 1);
            StatisticMonitor.InvokeStatisticPage(newProgressedCount);
        }
+
+       /// <summary>
+       /// 获取原始号码进度数
+       /// </summary>
+       /// <param name="issueNumber"></param>
+       /// <returns></returns>
+       private int GetStatisticedPageCount(string issueNumber)
+       {
+           string tableName = _baseDao.GetTableName(issueNumber, TableType.OriginalNum, SSQFrom.Taobao);
+           int count = _baseDao.QueryProgress(tableName);
+           return count;
+       }
+
     }
 }
