@@ -13,7 +13,7 @@ namespace Statistic.StatisticOrgNumber
         /// </summary>
         /// <param name="statisticedItemCount">已经统计了的页码</param>
         /// <returns></returns>
-        List<string> StatisticOrgNumber(string issueNum, int statisticedItemCount);
+        void StatisticOrgNumber(string issueNum);
         /// <summary>
         /// 每页的个数
         /// </summary>

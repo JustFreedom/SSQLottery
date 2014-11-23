@@ -32,18 +32,18 @@ namespace SSQDao.Dao.Implement
             {
                 conn.Open();
                 var command = new SqlCommand(sql, conn);
-                int paraMaxCount = 2000;
-                int count = parameters.Length/paraMaxCount;
-                for (int i = 0; i < count; i++)
-                {
-                    Array tempPara = Array.CreateInstance(typeof(IDataParameter), paraMaxCount);
-                    Array.Copy(parameters, i * paraMaxCount, tempPara, 0, paraMaxCount);
-                    command.Parameters.AddRange(tempPara);
-                    command.ExecuteNonQuery();   
-                }
-                int paraCount = parameters.Length % paraMaxCount;
-                Array tempPara1 = Array.CreateInstance(typeof(IDataParameter), paraCount);
-                Array.Copy(parameters, count * paraMaxCount, tempPara1, 0, paraCount);
+                //int paraMaxCount = 2000;
+                //int count = parameters.Length/paraMaxCount;
+                //for (int i = 0; i < count; i++)
+                //{
+                //    Array tempPara = Array.CreateInstance(typeof(IDataParameter), paraMaxCount);
+                //    Array.Copy(parameters, i * paraMaxCount, tempPara, 0, paraMaxCount);
+                //    command.Parameters.AddRange(tempPara);
+                //    command.ExecuteNonQuery();   
+                //}
+                //int paraCount = parameters.Length % paraMaxCount;
+                //Array tempPara1 = Array.CreateInstance(typeof(IDataParameter), paraCount);
+                //Array.Copy(parameters, count * paraMaxCount, tempPara1, 0, paraCount);
                 command.Parameters.AddRange(parameters);
                 command.ExecuteNonQuery();
             }
@@ -270,22 +270,26 @@ namespace SSQDao.Dao.Implement
 
         public void InsertOriginalNum(string issueNumber, IList<string> originalNumbers)
         {
+            string tableName = GetTableName(issueNumber, TableType.OriginalNum, GetSSQFrom());
             if (originalNumbers.Count < 1)
                 return;
-            List<string> valueList = new List<string>();
-            IList<IDataParameter> parameters = new List<IDataParameter>();
-            int i = 1;
-            foreach (string originalNumber in originalNumbers)
+            using (DataTable dataTable = new DataTable())
             {
-                valueList.Add(string.Format("{0}{1}{2}", Const.DataTypeToken, Const.Org_OriginalNumber, i));
-                parameters.Add(GetDataParameter(Const.Org_OriginalNumber + i, DbType.String, originalNumber));
-                i++;
+                dataTable.Columns.Add(Const.Org_OriginalNumber, typeof(string));
+                foreach (string originalNumber in originalNumbers)
+                {
+                    DataRow dataRow = dataTable.NewRow();
+                    dataRow[Const.Org_OriginalNumber] = originalNumber;
+                    dataTable.Rows.Add(dataRow);
+                }
+                using (SqlBulkCopy bulk = new SqlBulkCopy(GetConnectionString()))
+                {
+                    bulk.BatchSize = 5000;
+                    bulk.DestinationTableName = tableName;
+                    bulk.ColumnMappings.Add(Const.Org_OriginalNumber, Const.Org_OriginalNumber);
+                    bulk.WriteToServer(dataTable);
+                }
             }
-            string tableName = GetTableName(issueNumber, TableType.OriginalNum, GetSSQFrom());
-            var sql = string.Format(
-                "begin use {0} insert into {1} ({2}) values ({3}) end  ", Const.DataBaseName,
-                tableName, Const.Org_OriginalNumber, string.Join("),(", valueList));
-            ExcuteNoQuery(sql, parameters.ToArray());
         }
 
         public List<string> QueryOrgNumbers(string issueNumber, int startIndex, int length)
@@ -437,6 +441,25 @@ namespace SSQDao.Dao.Implement
 
             }
             return count;
+        }
+
+        public bool IsExistDetailOrderKey(string issueNumber, string detailOrderKey)
+        {
+            string tableName = GetTableName(issueNumber, TableType.DetailOrderKey, GetSSQFrom());
+            var sql = string.Format(
+                "begin use {0} select count(*) from {1} where {2} = {3}{2} end ", Const.DataBaseName, tableName,
+                Const.DOK_DetailOrderKey, Const.DataTypeToken);
+            var dataPara = GetDataParameter(Const.DOK_DetailOrderKey, DbType.String, detailOrderKey);
+            bool exist = false;
+            try
+            {
+                exist = int.Parse(ExecuteScalary(sql, dataPara).ToString()) > 0;
+            }
+            catch (Exception)
+            {
+
+            }
+            return exist;
         }
 
         public SSQFrom GetSSQFrom()

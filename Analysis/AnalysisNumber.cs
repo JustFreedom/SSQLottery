@@ -10,6 +10,7 @@ namespace Analysis
     internal class AnalysisNumber : IAnalysisNumber, IBase
     {
         private readonly string _issueNumber;
+        private object locker = new object();
         public AnalysisNumber( string issueNumber)
         {
             _issueNumber = issueNumber;
@@ -33,15 +34,36 @@ namespace Analysis
             if (totalItemCount <= processedCount)
                 return ;
             int pageSize = GetPageSize();
+
             
-            for (int i = processedCount; i < totalItemCount; i = i + pageSize)
+            while (totalItemCount> processedCount)
             {
-                List<string> orgNumbers = _baseDao.QueryOrgNumbers(_issueNumber, processedCount, pageSize);
-                _baseDao.InsertOrUpdateToProgressRate(analysisTableName, orgNumbers.Count);
+                List<string> orgNumbers;
+                lock (locker)
+                {
+                    processedCount = _baseDao.QueryProgress(analysisTableName);
+                    totalItemCount = _baseDao.QueryItemsCount(orgNumberTableName);
+                    if (totalItemCount <= processedCount)//是为了防止多线程，重复分析
+                        return;
+                    orgNumbers = _baseDao.QueryOrgNumbers(_issueNumber, processedCount, pageSize);
+                    _baseDao.InsertOrUpdateToProgressRate(analysisTableName, orgNumbers.Count);
+                }
                 List<SSQNumberDefine> ssqNumberDefines = AnaysisNumber(orgNumbers);
-                SaveAnalysisNumber(_issueNumber,ssqNumberDefines);
-                InsertOrUpdateProgressCount(_issueNumber, orgNumbers.Count);
+                SaveAnalysisNumber(_issueNumber, ssqNumberDefines);
+                InsertOrUpdateProgressCount(_issueNumber, ssqNumberDefines.Count);
             }
+            //for (int i = processedCount; i < totalItemCount; i = i + pageSize)
+            //{
+            //     List<string> orgNumbers = new List<string>();
+            //    lock (locker)
+            //    {
+            //        orgNumbers = _baseDao.QueryOrgNumbers(_issueNumber, processedCount, pageSize);
+            //        _baseDao.InsertOrUpdateToProgressRate(analysisTableName, orgNumbers.Count);
+            //    }
+            //    List<SSQNumberDefine> ssqNumberDefines = AnaysisNumber(orgNumbers);
+            //    SaveAnalysisNumber(_issueNumber,ssqNumberDefines);
+            //    InsertOrUpdateProgressCount(_issueNumber, orgNumbers.Count);
+            //}
             return ;
         }
 

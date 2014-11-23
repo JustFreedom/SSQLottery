@@ -25,9 +25,11 @@ namespace Statistic
            return new TaobaoStatisticInit();
        }
 
+       private static IStatisticOrgNumber _taobaoStatisticOrgNumberInstance;
        public static IStatisticOrgNumber TaobaoStatisticOrgNumberInstance()
        {
-           return new TaobaoStatisticOrgNumber();
+           return _taobaoStatisticOrgNumberInstance ??
+                  (_taobaoStatisticOrgNumberInstance = new TaobaoStatisticOrgNumber());
        }
     }
 }

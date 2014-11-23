@@ -12,7 +12,8 @@ namespace Statistic.StatisticOrgNumber
 {
     internal class TaobaoStatisticOrgNumber : IStatisticOrgNumber
     {
-        public List<string> StatisticOrgNumber(string issueNumber, int statisticedItemCount)
+        private Object lockObj = new Object();
+        public void StatisticOrgNumber(string issueNumber)
         {
             List<string> orgNumbers = new List<string>();
             BaseStatistic baseStatistic = new TaobaoBaseStatistic();
@@ -22,15 +23,26 @@ namespace Statistic.StatisticOrgNumber
             string detailOrderKeytableName = _baseDao.GetTableName(issueNumber, TableType.DetailOrderKey, GetSSQFrom());
             int totalItemCount = _baseDao.QueryItemsCount(detailOrderKeytableName);
             if (totalItemCount <= processedCount)
-                return orgNumbers;
+                return ;
             int pageSize = GetPageSize();
             TaobaoBaseStatistic taobaoBaseStatistic = new TaobaoBaseStatistic();
             string issueId = taobaoBaseStatistic.GetIssueId();
-            
-            for (int i = processedCount; i < totalItemCount;i = i + pageSize)
+
+
+            while (totalItemCount > processedCount)
             {
-                List<string> detailOrderKeys = _baseDao.QueryDetailOrderKey(issueNumber, processedCount, pageSize);
-                _baseDao.InsertOrUpdateToProgressRate(orgTableName, detailOrderKeys.Count);
+                List<string> detailOrderKeys = new List<string>();
+                lock (lockObj)
+                {
+                    totalItemCount = _baseDao.QueryItemsCount(detailOrderKeytableName);
+                    processedCount = _baseDao.QueryProgress(orgTableName);
+                    if (totalItemCount <= processedCount)
+                        break;
+                    detailOrderKeys = _baseDao.QueryDetailOrderKey(issueNumber, processedCount, pageSize);
+                    _baseDao.InsertOrUpdateToProgressRate(orgTableName, detailOrderKeys.Count);
+
+                }
+              
                 foreach (string orderKey in detailOrderKeys)
                 {
                     string respStr =
@@ -39,31 +51,25 @@ namespace Statistic.StatisticOrgNumber
                                                        UrlConst.ConstructUrlPara(UrlConst.Issue_id, issueId) +
                                                        UrlConst.ConstructUrlPara(UrlConst.Page, 1.ToString()));
                     orgNumbers.AddRange(baseStatistic.GetOrgNumbers(respStr));
-                    
+
                     int detailPage_PageCount = baseStatistic.GetDetailOrderPage_PageCount(respStr);
                     for (int j = 1; j < detailPage_PageCount; j++)
                     {
-                       respStr =
-                       baseStatistic.GetResponseByUrl(UrlConst.DetailOrderUrl +
-                                                      UrlConst.ConstructUrlPara(UrlConst.Tb_United_id, orderKey) +
-                                                      UrlConst.ConstructUrlPara(UrlConst.Issue_id, issueId) +
-                                                      UrlConst.ConstructUrlPara(UrlConst.Page, j.ToString()));
+                        respStr =
+                        baseStatistic.GetResponseByUrl(UrlConst.DetailOrderUrl +
+                                                       UrlConst.ConstructUrlPara(UrlConst.Tb_United_id, orderKey) +
+                                                       UrlConst.ConstructUrlPara(UrlConst.Issue_id, issueId) +
+                                                       UrlConst.ConstructUrlPara(UrlConst.Page, j.ToString()));
                         orgNumbers.AddRange(baseStatistic.GetOrgNumbers(respStr));
                     }
-                    int sqlMaxCount = 1000;
-                    int modle = orgNumbers.Count / sqlMaxCount;
-                    int complemente = orgNumbers.Count % sqlMaxCount;
-                    for (int k = 0; k <= modle; k++)
-                    {
-                        int endIndex = k == modle ? Math.Min(sqlMaxCount, complemente) : sqlMaxCount;
-                        var tempList = orgNumbers.GetRange(k * sqlMaxCount, endIndex);
-                        SaveOriginalNumbers(issueNumber, tempList);
-                        InsertOrUpdateProgressCount(issueNumber, tempList.Count);
-                    }
+                    SaveOriginalNumbers(issueNumber, orgNumbers);
+                    //InsertOrUpdateProgressCount(issueNumber, orgNumbers.Count,false);
+                    StatisticMonitor.InvokeStatisticOriginalNumber(orgNumbers.Count, false);
                     orgNumbers.Clear();
                 }
             }
-            return orgNumbers;
+            //通知统计完成
+            StatisticMonitor.InvokeStatisticOriginalNumber(0, true);
         }
 
         public int GetPageSize()
@@ -90,13 +96,18 @@ namespace Statistic.StatisticOrgNumber
             return SSQFrom.Taobao;
         }
 
-        public void InsertOrUpdateProgressCount(string issueNumber, int newProgressedCount)
+        public void InsertOrUpdateProgressCount(string issueNumber, int newProgressedCount, bool isFinished = false)
         {
             if(string.IsNullOrEmpty(issueNumber)|| newProgressedCount<1)
                 return;
             string tableName = _baseDao.GetTableName(issueNumber, TableType.OriginalNum, SSQFrom.Taobao);
             _baseDao.InsertOrUpdateToProgressRate(tableName, newProgressedCount);
-            StatisticMonitor.InvokeStatisticOriginalNumber(newProgressedCount);
+            StatisticMonitor.InvokeStatisticOriginalNumber(newProgressedCount, isFinished);
+        }
+
+        public void InsertOrUpdateProgressCount(string issueNumber, int newProgressedCount)
+        {
+            throw new NotImplementedException();
         }
     }
 }

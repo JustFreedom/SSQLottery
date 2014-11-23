@@ -11,7 +11,7 @@ namespace Statistic
        public delegate void StatisticPage(int newStatisticPageCount);
        public static event StatisticPage NewStatisticPageCount;
 
-       public delegate void StatisticOriginalNumber(int newOriginalNumberCount);
+       public delegate void StatisticOriginalNumber(int newOriginalNumberCount, bool isFinished);
 
        public static event StatisticOriginalNumber NewStatisticOriginalNumberCount;
 
@@ -19,9 +19,9 @@ namespace Statistic
        {
            NewStatisticPageCount.Invoke(newStatisticPageCount);
        }
-       public static void InvokeStatisticOriginalNumber(int newStatisticOriginalNumberCount)
+       public static void InvokeStatisticOriginalNumber(int newStatisticOriginalNumberCount, bool isFinished)
        {
-           NewStatisticOriginalNumberCount.Invoke(newStatisticOriginalNumberCount);
+           NewStatisticOriginalNumberCount.Invoke(newStatisticOriginalNumberCount, isFinished);
        }
     }
 }

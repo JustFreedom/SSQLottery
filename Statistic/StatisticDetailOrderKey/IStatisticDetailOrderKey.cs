@@ -13,7 +13,7 @@ namespace Statistic
         /// </summary>
         /// <param name="statisticedPageCount">已经统计了的页码</param>
         /// <returns></returns>
-        List<string> StatisticDetailOrderKey(string issueNum, int statisticedPageCount);
+        List<string> StatisticDetailOrderKey(string issueNum);
 
       
     }

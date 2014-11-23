@@ -162,6 +162,13 @@ namespace SSQDao
         /// <param name="tableName"></param>
         /// <returns></returns>
         int QueryItemsCount(string tableName);
+        /// <summary>
+        /// 是否存在订单主键
+        /// </summary>
+        /// <param name="issueNumber"></param>
+        /// <param name="detailOrderKey">订单主键</param>
+        /// <returns>true，存在；false，不存在</returns>
+        bool IsExistDetailOrderKey(string issueNumber, string detailOrderKey);
 
     }
 

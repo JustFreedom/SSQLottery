@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using SSQDao;
-
 namespace Statistic
 {
    internal class TaobaoStatisticDetailOrderKey:IStatisticDetailOrderKey
@@ -23,17 +24,37 @@ namespace Statistic
            BaseStatistic baseStatistic = new TaobaoBaseStatistic();
            string respStr = baseStatistic.GetResponseByUrl(UrlConst.UnitedListByPage);
            int totalPageCount = baseStatistic.GetTotalPageCount(respStr);
-           int notStatisticCount = totalPageCount - statisticedPageCount;
            _baseDao.CreateDetailOrderKeyTable(issueNum, SSQFrom.Taobao);
-           for (int i = notStatisticCount; i >=1; i--)
+           var serializer = new JavaScriptSerializer();
+
+           if (totalPageCount > 0 && totalPageCount >= statisticedPageCount)
+           {
+               respStr = baseStatistic.GetResponseByUrl(UrlConst.UnitedListByPage + statisticedPageCount);
+               string tableName = _baseDao.GetTableName(issueNum, TableType.DetailOrderKey, SSQFrom.Taobao);
+               int statisticedOrderKeyCount = _baseDao.QueryItemsCount(tableName);
+               TaobaoPageShcemeDefine shcemeDefine = serializer.Deserialize<TaobaoPageShcemeDefine>(respStr);
+               int notStatisticCountInPage = shcemeDefine.schemes.Count - statisticedOrderKeyCount;
+               for (int i = 0; i < notStatisticCountInPage; i++)
+               {
+                   detailOrderkeys.Add(shcemeDefine.schemes[i].id);
+               }
+               SaveDetailOrderKeys(issueNum, detailOrderkeys);
+               InsertOrUpdateProgressCount(issueNum, 1);
+               detailOrderkeys.Clear();
+               return new List<string>();
+           }
+           for (int i = statisticedPageCount + 1; i <= totalPageCount; i++)
            {
                respStr = baseStatistic.GetResponseByUrl(UrlConst.UnitedListByPage + i);
                Regex detailOrderKeyReg = new Regex(RegexConst.Taobao_DetailOrderKey);
                MatchCollection detailOrderKeys = detailOrderKeyReg.Matches(respStr);
+            
                foreach (Match match in detailOrderKeys)
                {
                   detailOrderkeys.Add(match.Value);
                }
+               if (detailOrderKeys.Count < 1)
+                   break;
                SaveDetailOrderKeys(issueNum, detailOrderkeys);
                InsertOrUpdateProgressCount(issueNum, 1);
                detailOrderkeys.Clear();
@@ -42,6 +63,22 @@ namespace Statistic
            //int itemsCount = 0;
            //int.TryParse(itemsCountStr, out itemsCount);
            return new List<string>();
+       }
+
+       private List<string> GetNotStatisticOrderKeyInLastpage(int lastPageIndex)
+       {
+           respStr = baseStatistic.GetResponseByUrl(UrlConst.UnitedListByPage + lastPageIndex);
+           string tableName = _baseDao.GetTableName(issueNum, TableType.DetailOrderKey, SSQFrom.Taobao);
+           int statisticedOrderKeyCount = _baseDao.QueryItemsCount(tableName);
+           TaobaoPageShcemeDefine shcemeDefine = serializer.Deserialize<TaobaoPageShcemeDefine>(respStr);
+           int notStatisticCountInPage = shcemeDefine.totalItem - statisticedOrderKeyCount;
+           for (int i = 0; i < notStatisticCountInPage; i++)
+           {
+               detailOrderkeys.Add(shcemeDefine.schemes[i].id);
+           }
+           SaveDetailOrderKeys(issueNum, detailOrderkeys);
+           InsertOrUpdateProgressCount(issueNum, 1);
+           detailOrderkeys.Clear();
        }
 
        private void SaveDetailOrderKeys(string issueNum ,IList<string> orderDetailKeys)

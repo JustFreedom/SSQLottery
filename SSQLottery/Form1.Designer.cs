@@ -48,24 +48,23 @@
             this.label2 = new System.Windows.Forms.Label();
             this.OriginalNumberTab = new System.Windows.Forms.TabPage();
             this.TaobaoOrgNumberGrp = new System.Windows.Forms.GroupBox();
+            this.TaobaoOrgStaticDoneLbl = new System.Windows.Forms.Label();
             this.TaobaoOrgStatisticStopBtn = new System.Windows.Forms.Button();
             this.TaobaoOrgStatisticStartBtn = new System.Windows.Forms.Button();
             this.TaobaoOrgStatisticedNumLbl = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.TaobaoOrgTotalNumLbl = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
-            this.IssueNumberTxt = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.TaobaoAnalysisGrp = new System.Windows.Forms.GroupBox();
+            this.label13 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.TaobaoAnalysisBtn = new System.Windows.Forms.Button();
             this.TaobaoAnalysisResultTotalCountLbl = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             this.TaobaoOrgNumberTotalCountLbl = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.TaobaoOrgNumberAnalysisedCountLbl = new System.Windows.Forms.Label();
+            this.IssueNumberTxt = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.DetailOrderKeyTab.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -73,7 +72,7 @@
             this.OriginalNumberTab.SuspendLayout();
             this.TaobaoOrgNumberGrp.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.TaobaoAnalysisGrp.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -272,6 +271,7 @@
             // 
             // TaobaoOrgNumberGrp
             // 
+            this.TaobaoOrgNumberGrp.Controls.Add(this.TaobaoOrgStaticDoneLbl);
             this.TaobaoOrgNumberGrp.Controls.Add(this.TaobaoOrgStatisticStopBtn);
             this.TaobaoOrgNumberGrp.Controls.Add(this.TaobaoOrgStatisticStartBtn);
             this.TaobaoOrgNumberGrp.Controls.Add(this.TaobaoOrgStatisticedNumLbl);
@@ -284,6 +284,14 @@
             this.TaobaoOrgNumberGrp.TabIndex = 0;
             this.TaobaoOrgNumberGrp.TabStop = false;
             this.TaobaoOrgNumberGrp.Text = "淘宝";
+            // 
+            // TaobaoOrgStaticDoneLbl
+            // 
+            this.TaobaoOrgStaticDoneLbl.AutoSize = true;
+            this.TaobaoOrgStaticDoneLbl.Location = new System.Drawing.Point(160, 116);
+            this.TaobaoOrgStaticDoneLbl.Name = "TaobaoOrgStaticDoneLbl";
+            this.TaobaoOrgStaticDoneLbl.Size = new System.Drawing.Size(0, 12);
+            this.TaobaoOrgStaticDoneLbl.TabIndex = 14;
             // 
             // TaobaoOrgStatisticStopBtn
             // 
@@ -341,25 +349,9 @@
             this.label12.TabIndex = 10;
             this.label12.Text = "已经统计的号码条数：";
             // 
-            // IssueNumberTxt
-            // 
-            this.IssueNumberTxt.Location = new System.Drawing.Point(79, 4);
-            this.IssueNumberTxt.Name = "IssueNumberTxt";
-            this.IssueNumberTxt.Size = new System.Drawing.Size(100, 21);
-            this.IssueNumberTxt.TabIndex = 2;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(14, 9);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(65, 12);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "当前期号：";
-            // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.groupBox1);
+            this.tabPage1.Controls.Add(this.TaobaoAnalysisGrp);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -368,22 +360,29 @@
             this.tabPage1.Text = "原始号码分析结果";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // groupBox1
+            // TaobaoAnalysisGrp
             // 
-            this.groupBox1.Controls.Add(this.label13);
-            this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Controls.Add(this.TaobaoOrgNumberAnalysisedCountLbl);
-            this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Controls.Add(this.TaobaoAnalysisBtn);
-            this.groupBox1.Controls.Add(this.TaobaoAnalysisResultTotalCountLbl);
-            this.groupBox1.Controls.Add(this.TaobaoOrgNumberTotalCountLbl);
-            this.groupBox1.Controls.Add(this.label11);
-            this.groupBox1.Location = new System.Drawing.Point(23, 24);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(227, 147);
-            this.groupBox1.TabIndex = 1;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "淘宝";
+            this.TaobaoAnalysisGrp.Controls.Add(this.label13);
+            this.TaobaoAnalysisGrp.Controls.Add(this.button1);
+            this.TaobaoAnalysisGrp.Controls.Add(this.TaobaoAnalysisBtn);
+            this.TaobaoAnalysisGrp.Controls.Add(this.TaobaoAnalysisResultTotalCountLbl);
+            this.TaobaoAnalysisGrp.Controls.Add(this.TaobaoOrgNumberTotalCountLbl);
+            this.TaobaoAnalysisGrp.Controls.Add(this.label11);
+            this.TaobaoAnalysisGrp.Location = new System.Drawing.Point(23, 24);
+            this.TaobaoAnalysisGrp.Name = "TaobaoAnalysisGrp";
+            this.TaobaoAnalysisGrp.Size = new System.Drawing.Size(227, 147);
+            this.TaobaoAnalysisGrp.TabIndex = 1;
+            this.TaobaoAnalysisGrp.TabStop = false;
+            this.TaobaoAnalysisGrp.Text = "淘宝";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(14, 30);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(89, 12);
+            this.label13.TabIndex = 14;
+            this.label13.Text = "分析结果条数：";
             // 
             // button1
             // 
@@ -413,15 +412,6 @@
             this.TaobaoAnalysisResultTotalCountLbl.TabIndex = 12;
             this.TaobaoAnalysisResultTotalCountLbl.Text = "0";
             // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(14, 83);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(125, 12);
-            this.label7.TabIndex = 9;
-            this.label7.Text = "已经统计原始号码数：";
-            // 
             // TaobaoOrgNumberTotalCountLbl
             // 
             this.TaobaoOrgNumberTotalCountLbl.AutoSize = true;
@@ -440,23 +430,21 @@
             this.label11.TabIndex = 10;
             this.label11.Text = "总原始号码数：";
             // 
-            // label13
+            // IssueNumberTxt
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(14, 30);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(89, 12);
-            this.label13.TabIndex = 14;
-            this.label13.Text = "分析结果条数：";
+            this.IssueNumberTxt.Location = new System.Drawing.Point(79, 4);
+            this.IssueNumberTxt.Name = "IssueNumberTxt";
+            this.IssueNumberTxt.Size = new System.Drawing.Size(100, 21);
+            this.IssueNumberTxt.TabIndex = 2;
             // 
-            // TaobaoOrgNumberAnalysisedCountLbl
+            // label3
             // 
-            this.TaobaoOrgNumberAnalysisedCountLbl.AutoSize = true;
-            this.TaobaoOrgNumberAnalysisedCountLbl.Location = new System.Drawing.Point(139, 83);
-            this.TaobaoOrgNumberAnalysisedCountLbl.Name = "TaobaoOrgNumberAnalysisedCountLbl";
-            this.TaobaoOrgNumberAnalysisedCountLbl.Size = new System.Drawing.Size(11, 12);
-            this.TaobaoOrgNumberAnalysisedCountLbl.TabIndex = 15;
-            this.TaobaoOrgNumberAnalysisedCountLbl.Text = "0";
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(14, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(65, 12);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "当前期号：";
             // 
             // Form1
             // 
@@ -478,8 +466,8 @@
             this.TaobaoOrgNumberGrp.ResumeLayout(false);
             this.TaobaoOrgNumberGrp.PerformLayout();
             this.tabPage1.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.TaobaoAnalysisGrp.ResumeLayout(false);
+            this.TaobaoAnalysisGrp.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -516,15 +504,14 @@
         private System.Windows.Forms.Label TaobaoOrgTotalNumLbl;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox TaobaoAnalysisGrp;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label TaobaoOrgNumberAnalysisedCountLbl;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button TaobaoAnalysisBtn;
         private System.Windows.Forms.Label TaobaoAnalysisResultTotalCountLbl;
         private System.Windows.Forms.Label TaobaoOrgNumberTotalCountLbl;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label TaobaoOrgStaticDoneLbl;
     }
 }
 
